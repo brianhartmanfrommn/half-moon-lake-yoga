@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, computed, inject, effect, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 // Import Angular Material Modules for UI components
@@ -7,9 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { YogaDataService, YogaClass } from '../shared/yoga-data.service';
 
-// Re-declare interfaces/types required by this component
-
-// Helper to check if two Dates (or Firebase Timestamps) represent the same day
+/**
+ * Helper to check if two Dates represent the same day.
+ * Used for filtering classes into the correct calendar cells.
+ */
 function isSameDay(date1: Date, date2: Date): boolean {
   return date1.getFullYear() === date2.getFullYear() &&
          date1.getMonth() === date2.getMonth() &&
@@ -33,9 +34,11 @@ export class HomeComponent {
   private yogaData = inject(YogaDataService);
   private router = inject(Router);
   
+  // Access the stream of sorted classes from the data service
   classesSignal = this.yogaData.sortedClasses;
 
   constructor() {
+    // Automatically initialize the selection once data is loaded
     effect(() => {
       const classes = this.sortedClasses();
       if (classes.length > 0 && untracked(this.selectedEventIndex) === -1) {
@@ -47,12 +50,16 @@ export class HomeComponent {
   // --- Calendar State & Properties ---
 
   private today = new Date();
-  // Initialized to current month
+  // View state for the calendar, default to the current month
   currentMonth = signal<Date>(new Date()); 
 
   readonly weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  // --- Mobile Event Navigation State ---
+  // --- Filtered and Computed State ---
+
+  /**
+   * Filter classes to only show current and future events.
+   */
   sortedClasses = computed(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -66,12 +73,18 @@ export class HomeComponent {
   selectedEventIndex = signal<number>(-1);
   selectedDate = signal<Date | null>(null);
 
+  /**
+   * The currently highlighted event based on navigation.
+   */
   selectedEvent = computed(() => {
     const classes = this.sortedClasses();
     const index = this.selectedEventIndex();
     return (index >= 0 && index < classes.length) ? classes[index] : null;
   });
 
+  /**
+   * Formats the selected date for the mobile navigation header.
+   */
   mobileSelectedDate = computed(() => {
     const date = this.selectedDate();
     if (!date) return 'SELECT A DAY';
@@ -87,13 +100,12 @@ export class HomeComponent {
     if (classes.length === 0) return;
     
     const now = new Date();
-    // Find first event today or in future
+    // Find the first event today or in the future to show initially
     let index = classes.findIndex(c => {
         const d = c.date.toDate();
         return d >= now || isSameDay(d, now);
     });
 
-    if (index === -1) index = classes.length - 1; // Default to last if all past
     if (index === -1) index = 0;
 
     this.selectedEventIndex.set(index);
@@ -110,6 +122,9 @@ export class HomeComponent {
     return this.currentMonth().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   });
 
+  /**
+   * Generates the 2D grid for the calendar month.
+   */
   calendarDays = computed(() => {
     const date = this.currentMonth();
     const year = date.getFullYear();
@@ -117,18 +132,17 @@ export class HomeComponent {
 
     const firstDayOfMonth = new Date(year, month, 1);
     const startingDayOfWeek = firstDayOfMonth.getDay(); 
-
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const calendar: (Date | null)[][] = [];
     let currentWeek: (Date | null)[] = [];
 
-    // 1. Add preceding padding days (null for empty cells)
+    // Add preceding padding days
     for (let i = 0; i < startingDayOfWeek; i++) {
       currentWeek.push(null);
     }
 
-    // 2. Add days of the current month
+    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month, day);
       currentWeek.push(currentDate);
@@ -139,7 +153,7 @@ export class HomeComponent {
       }
     }
 
-    // 3. Add trailing padding days
+    // Add trailing padding days
     while (currentWeek.length > 0 && currentWeek.length < 7) {
       currentWeek.push(null);
     }
@@ -153,15 +167,11 @@ export class HomeComponent {
   // --- Navigation Methods ---
 
   previousMonth(): void {
-    this.currentMonth.update(date => {
-      return new Date(date.getFullYear(), date.getMonth() - 1, 1);
-    });
+    this.currentMonth.update(date => new Date(date.getFullYear(), date.getMonth() - 1, 1));
   }
 
   nextMonth(): void {
-    this.currentMonth.update(date => {
-      return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-    });
+    this.currentMonth.update(date => new Date(date.getFullYear(), date.getMonth() + 1, 1));
   }
 
   prevEvent(): void {
@@ -189,22 +199,19 @@ export class HomeComponent {
 
   getClassesForDay(day: Date): YogaClass[] {
     if (!day) return [];
-    // cls.date is a Firebase Timestamp, so we use .toDate() for comparison
-    return this.sortedClasses().filter(cls => {
-      const classDate: Date = cls.date.toDate();
-      return isSameDay(classDate, day);
-    });
+    return this.sortedClasses().filter(cls => isSameDay(cls.date.toDate(), day));
   }
 
+  /**
+   * Navigates to the sign-up page for a selected class.
+   */
   handleDayClick(cls: YogaClass[]): void {
-    // Navigate to sign-up for the first non-canceled class found on that day.
     const activeClass = cls.find(c => !c.isCanceled);
     if (activeClass) {
         this.router.navigate(['/signup', activeClass.id]);
     }
   }
 
-  // Existing class formatting methods
   formatDate(timestamp: any): string {
     return timestamp.toDate().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' });
   }

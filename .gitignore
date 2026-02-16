@@ -1,19 +1,37 @@
-# IDEs
+# --- IDEs and Editors ---
 .vscode/
 .idea/
+*.swp
+*.bak
 
-# Angular Cache
+# --- Angular & Build ---
 .angular/
-
-# Firebase Cache
-.firebase/
-
-# Build Output
 dist/
+tmp/
+out-tsc/
+bazel-out/
+# Angular local workspace settings
+.editorconfig
 
-# Dependencies
+# --- Firebase ---
+.firebase/
+firebase-debug.log
+ui-debug.log
+firestore-debug.log
+
+# --- Dependencies ---
 node_modules/
 
-# SECRETS (Where your new Firebase API key lives!)
+# --- SECRETS & ENVIRONMENTS ---
+# Ignore the specific environment file containing your Firebase API key
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# While you aren't using .env with 'ng serve', it's good practice to keep these ignored
 .env
 .env.local
+.env.*.local
+
+# --- System Files ---
+.DS_Store
+Thumbs.db

@@ -1,3 +1,4 @@
+/* src/app/home/home.component.ts */
 import { ChangeDetectionStrategy, Component, signal, computed, inject, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -212,10 +213,8 @@ export class HomeComponent {
   handleDayClick(cls: YogaClass[]): void {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-    // On mobile, allow selecting canceled classes if no active class is present
-    const activeClass = isMobile 
-      ? (cls.find(c => !c.isCanceled) || cls[0]) 
-      : cls.find(c => !c.isCanceled);
+    // RESTORED: Find first class (even if canceled) to allow selection on mobile
+    const activeClass = cls[0];
 
     if (!activeClass) return;
 
@@ -225,7 +224,8 @@ export class HomeComponent {
         this.selectedEventIndex.set(index);
         this.updateMonthFromEvent(activeClass);
       }
-    } else {
+    } else if (!activeClass.isCanceled) {
+      // On desktop, only navigate if NOT canceled
       this.bookClass(activeClass);
     }
   }

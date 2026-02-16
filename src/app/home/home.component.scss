@@ -1,3 +1,4 @@
+/* src/app/home/home.component.scss */
 // Calendar Grid Styles (Replaces Tailwind Layout)
 
 .mobile-only {
@@ -144,7 +145,8 @@
     }
   }
 
-  &.is-selected {
+  // UPDATED: Selection color only applies if the day is not canceled
+  &.is-selected:not(.is-canceled-day) {
     // Shade the selected day
     @media (max-width: 959px) {
       background-color: #ff5722 !important;

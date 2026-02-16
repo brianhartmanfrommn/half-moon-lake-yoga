@@ -1,0 +1,86 @@
+/* Styles for the root App Component */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+/* Tailwind CSS is assumed to be globally available in the standard project setup */
+
+.half-height-toolbar {
+    /* Override Material default minimum height (usually 64px on desktop) */
+    min-height: 32px !important; 
+    height: 32px !important;
+    
+    /* Target the content area within the toolbar to ensure it also shrinks */
+    .max-w-7xl {
+        height: 32px;
+        
+        /* Apply margin reset to all elements inside the flex container to ensure items-center works effectively */
+        nav, h1 {
+            margin: 0;
+        }
+        
+        /* Apply true center for the absolute positioned title */
+        h1 {
+            top: 50%;
+            left: 50%; /* Horizontal Center */
+            /* Apply both horizontal and vertical translation for perfect center */
+            transform: translate(-50%, -50%); 
+        }
+    }
+}
+
+mat-toolbar {
+    position: relative; 
+    
+    h1 {
+        position: absolute;
+        left: 50%; 
+        top: 50%; 
+        transform: translate(-50%, -50%); 
+        margin: 0;
+        z-index: 10;
+
+        /* Mobile default size (approx 20px) */
+        /*font-size: x-large; */
+
+        /* Desktop size (xx-large) for screens 960px and wider */
+        @media (min-width: 960px) {
+            font-size: xx-large;
+        }
+    }
+}
+
+/* --- Added Loading Spinner Styles --- */
+.spinner-container {
+    position: relative; 
+    width: 100%; 
+    height: 100%;
+    /* Ensure it has height even if content is empty */
+    min-height: 50vh; 
+}
+
+.spinner-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Maintain the flex column layout for the spinner and text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-only {
+  display: none;
+  @media (max-width: 959px) {
+    display: block;
+  }
+}
+
+.desktop-only {
+  @media (max-width: 959px) {
+    display: none !important;
+  }
+}

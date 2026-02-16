@@ -1,0 +1,28 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.divider {
+  margin: 8px 0;
+}

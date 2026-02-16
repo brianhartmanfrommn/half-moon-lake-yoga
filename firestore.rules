@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Rules for the classes collection
+    match /classes/{classId} {
+      
+      // Allow anyone to read class data (for public display)
+      allow read: if true; 
+
+      // ⬇️ RULE TO ALLOW PUBLIC SIGN-UP (UNAUTHENTICATED UPDATE) ⬇️
+      allow update: if !request.auth
+                    // 1. Ensure only the 'attendees' field is being modified
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['attendees'])
+                    // 2. Ensure the new list size is exactly one greater than the old list
+                    && request.resource.data.attendees.size() == resource.data.attendees.size() + 1
+                    // 3. Ensure the new list contains all original members
+                    && request.resource.data.attendees.toSet().hasAll(resource.data.attendees.toSet());
+
+      // ⬇️ RULE TO PROTECT ADMIN OPERATIONS (CREATE/DELETE/GENERAL UPDATE) ⬇️
+      // Admin functions (create, delete, toggle cancel/general edit) require an authenticated user.
+      allow create, delete, update: if request.auth.uid != null;
+    }
+  }
+}

@@ -1,0 +1,55 @@
+<div class="h-screen bg-gray-50 flex flex-col font-sans">
+
+<mat-toolbar color="primary">
+  @if (isAuthenticated()) {
+    <button mat-icon-button (click)="sidenav.toggle()" class="mr-2" aria-label="Open Menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+
+  <h1 class="mobile-only" style="font-family: 'Montserrat Alternates', sans-serif; font-size: 24px;">Half Moon Lake Yoga</h1>
+  <h1 class="desktop-only" style="font-family: 'Montserrat Alternates', sans-serif;">Half Moon Lake Yoga</h1>
+  
+  <img src="assets/images/yoga.png" alt="Yoga Logo" style="height: 40px; margin-left: auto;">
+</mat-toolbar>
+
+  <mat-sidenav-container class="flex-grow">
+    <mat-sidenav #sidenav mode="over" class="w-64">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/" (click)="sidenav.close()" routerLinkActive #rlaCalendar="routerLinkActive" [activated]="rlaCalendar.isActive" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon matListItemIcon>calendar_today</mat-icon>
+          <span matListItemTitle>Calendar</span>
+        </a>
+
+        @if (isAdmin()) {
+          <a mat-list-item routerLink="/admin" (click)="sidenav.close()" routerLinkActive #rlaAdmin="routerLinkActive" [activated]="rlaAdmin.isActive">
+            <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+            <span matListItemTitle>Admin</span>
+          </a>
+          <a mat-list-item (click)="logout(); sidenav.close()">
+            <mat-icon matListItemIcon>logout</mat-icon>
+            <span matListItemTitle>Logout</span>
+          </a>
+        }
+      </mat-nav-list> </mat-sidenav>
+
+    <mat-sidenav-content class="flex flex-col">
+      <main class="flex-grow w-full p-4 sm:p-6 lg:p-8 flex flex-col">
+        @if (!isAuthReady()) {
+          <div class="spinner-container text-gray-500">
+             <div class="spinner-content">
+                <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+                <p class="mt-4">Initializing application...</p>
+             </div>
+          </div>
+        }
+
+        @if (isAuthReady()) {
+          <div class="w-full h-full">
+            <router-outlet></router-outlet>
+          </div>
+        }
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

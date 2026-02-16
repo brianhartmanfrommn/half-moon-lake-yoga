@@ -1,0 +1,100 @@
+<div class="space-y-8 max-w-7xl mx-auto">
+  
+  <mat-card class="mat-elevation-z8">
+    <!-- Mobile Header: Month Name -->
+    <div class="mobile-month-header mobile-only">
+      <h2 class="mat-h2">{{ displayMonth() }}</h2>
+    </div>
+
+    <!-- Mobile Date Navigation -->
+    <div class="mobile-date-nav mobile-only">
+      <button mat-icon-button (click)="prevEvent()" [style.visibility]="selectedEventIndex() > 0 ? 'visible' : 'hidden'" aria-label="Previous Event">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      <div class="selected-date-display" [innerHTML]="mobileSelectedDate()"></div>
+
+      <button mat-icon-button (click)="nextEvent()" [style.visibility]="selectedEventIndex() < sortedClasses().length - 1 ? 'visible' : 'hidden'" aria-label="Next Event">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <div class="calendar-header desktop-only">
+      <button mat-icon-button (click)="previousMonth()" aria-label="Previous Month">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <mat-card-title class="mat-subheading-2">{{ displayMonth() }}</mat-card-title>
+      <button mat-icon-button (click)="nextMonth()" aria-label="Next Month">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <mat-card-content>
+      <div class="calendar-container">
+      <div class="calendar-weekdays">
+        @for (day of weekdays; track day) {
+          <div class="weekday-label">{{ day }}</div>
+        }
+      </div>
+
+      <div class="calendar-grid">
+        @for (week of calendarDays(); track $index) {
+          @for (day of week; track day) {
+            @if (day) {
+              <div
+                (click)="handleDayClick(getClassesForDay(day))"
+                class="calendar-day-cell"
+                [class.is-today]="isToday(day)"
+                [class.has-classes]="getClassesForDay(day).length > 0"
+                [class.is-selected]="selectedEvent() && getClassesForDay(day).includes(selectedEvent()!)"
+              >
+                <div class="day-number">
+                  <span class="mobile-weekday-label">{{ day | date:'EEE' }}</span>
+                  {{ day.getDate() }}
+                </div>
+
+                @if (getClassesForDay(day).length > 0) {
+                  <div class="class-list">
+                    @for (cls of getClassesForDay(day); track cls.id) {
+                      <div class="class-item"
+                           [class.is-canceled]="cls.isCanceled"
+                           [title]="cls.isCanceled ? 'CANCELED: ' + cls.location : cls.location + ' at ' + formatTime(cls.date)">
+                          @if (cls.isCanceled) {
+                            CANCELED
+                          } @else {
+                            <span class="class-time-display">{{ formatTime(cls.date) }}</span>
+                            <span class="class-location-display">{{ cls.location }}</span>
+                          }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="calendar-day-cell empty-cell"></div>
+            }
+          }
+        }
+      </div>
+      </div>
+    </mat-card-content>
+
+    <!-- Mobile Details Section -->
+    @if (selectedEvent(); as evt) {
+      <div class="mobile-event-details mobile-only">
+        <h3 class="mat-h3">Class Details</h3>
+        <div class="detail-row">
+          <mat-icon>schedule</mat-icon>
+          <span>{{ formatTime(evt.date) }}</span>
+        </div>
+        <div class="detail-row">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ evt.location }}</span>
+        </div>
+        <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="handleDayClick([evt])" [disabled]="evt.isCanceled">
+          {{ evt.isCanceled ? 'CANCELED' : 'Sign Up' }}
+        </button>
+      </div>
+    }
+  </mat-card>
+</div>

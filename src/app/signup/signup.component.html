@@ -1,0 +1,75 @@
+<div class="signup-container">
+  <mat-card class="signup-card mat-elevation-z4">
+
+    <div class="card-header-actions">
+      <button mat-button color="primary" (click)="cancelSignup.emit()">
+        <mat-icon>arrow_back</mat-icon> Back to Calendar
+      </button>
+    </div>
+
+    <mat-card-header>
+      <mat-card-title class="page-title">Class Registration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (!selectedClass) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">event_busy</mat-icon>
+          <p>Please select a class from the Home page.</p>
+        </div>
+      } @else {
+        <div class="class-info-banner">
+          <div class="info-item">
+            <mat-icon>location_on</mat-icon>
+            <span class="info-text">{{ selectedClass.location }}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>schedule</mat-icon>
+            <span class="info-text">{{ formatDateTime(selectedClass.date) }}</span>
+          </div>
+        </div>
+
+        <form #signupForm="ngForm" (ngSubmit)="handleSignup()" class="signup-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Your Full Name</mat-label>
+            <input matInput type="text" name="name" #nameInput="ngModel" [(ngModel)]="attendeeName" minlength="2" required placeholder="E.g., Jane Doe">
+            <mat-icon matSuffix>person</mat-icon>
+            @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+              <mat-error>Name is required (min 2 chars)</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button type="submit" mat-flat-button [style.background-color]="isUserRegistered() ? null : '#ff5722'" [style.color]="isUserRegistered() ? null : 'white'" [color]="isUserRegistered() ? 'warn' : null" [disabled]="!nameInput.valid || isProcessing" class="submit-btn">
+              {{ isProcessing ? 'Processing...' : (isUserRegistered() ? 'Unregister' : 'Sign Up') }}
+            </button>
+          </div>
+        </form>
+
+        <div class="attendees-section">
+          <h3 class="mat-h3">Who's Signed Up? ({{ selectedClass.attendees.length }})</h3>
+          <mat-divider></mat-divider>
+          
+          <mat-list role="list">
+            @for (attendee of selectedClass.attendees; track $index) {
+              <mat-list-item role="listitem">
+                <mat-icon matListItemIcon>person</mat-icon>
+                <div matListItemTitle>{{ attendee }}</div>
+                
+                @if (registeredName === attendee) {
+                  <button mat-icon-button color="warn" (click)="removeAttendee(attendee)" [disabled]="isProcessing" matListItemMeta aria-label="Unregister">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </mat-list-item>
+            } @empty {
+              <div class="no-attendees">
+                No attendees signed up yet. Be the first!
+              </div>
+            }
+          </mat-list>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

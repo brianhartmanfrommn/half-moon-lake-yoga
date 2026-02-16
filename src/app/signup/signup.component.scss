@@ -1,0 +1,142 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+$half-moon-lake-yoga-theme-primary: mat.m2-define-palette(mat.$m2-deep-orange-palette);
+$half-moon-lake-yoga-theme-accent: mat.m2-define-palette(mat.$m2-cyan-palette);
+$half-moon-lake-yoga-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$half-moon-lake-yoga-theme: mat.m2-define-light-theme(( 
+    color: (
+        primary: $half-moon-lake-yoga-theme-primary, 
+        accent: $half-moon-lake-yoga-theme-accent, 
+        warn: $half-moon-lake-yoga-theme-warn,
+    )
+));
+
+@include mat.all-component-themes($half-moon-lake-yoga-theme);
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* ADDED: Custom styles for MatSnackBar */
+.snackbar-success {
+    /* Use !important to override default Material styling */
+    background-color: #4CAF50 !important; /* Green */
+    color: white !important;
+}
+
+.snackbar-error {
+    background-color: #f44336 !important; /* Red */
+    color: white !important;
+}
+
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  min-height: calc(100vh - 64px); // Adjust based on toolbar height
+  box-sizing: border-box;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px;
+  
+  @media (min-width: 600px) {
+    padding: 24px;
+  }
+}
+
+.card-header-actions {
+  margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.class-info-banner {
+  background-color: rgba(var(--mat-primary-color), 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(var(--mat-primary-color), 0.1);
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    color: var(--mat-primary-text-color);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    mat-icon {
+      color: var(--mat-primary-color);
+    }
+
+    .info-text {
+      font-weight: 500;
+    }
+  }
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+
+  .full-width {
+    width: 100%;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 8px;
+    font-size: 1.1rem;
+  }
+}
+
+.attendees-section {
+  h3 {
+    margin-bottom: 8px;
+    color: var(--mat-secondary-text-color);
+  }
+
+  .no-attendees {
+    padding: 16px;
+    text-align: center;
+    color: var(--mat-secondary-text-color);
+    font-style: italic;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--mat-secondary-text-color);
+
+  .empty-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,40 @@
+<div class="login-container">
+  <mat-card class="login-card mat-elevation-z4">
+    <mat-card-header>
+      <mat-card-title>Admin Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isProcessing) {
+        <div style="display: flex; justify-content: center; padding: 48px;">
+          <mat-progress-spinner mode="indeterminate" diameter="48"></mat-progress-spinner>
+        </div>
+      } @else {
+      <div class="login-options">
+        <!-- Email/Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="email" type="email">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput [(ngModel)]="password" type="password">
+        </mat-form-field>
+        <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="loginEmail()" [disabled]="isProcessing">
+          Login with Email
+        </button>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- Social Providers -->
+        <button mat-stroked-button (click)="loginGoogle()" [disabled]="isProcessing">
+          <mat-icon>public</mat-icon> Login with Google
+        </button>
+
+        <button mat-stroked-button (click)="loginApple()" [disabled]="isProcessing">
+          <mat-icon>apple</mat-icon> Login with Apple
+        </button>
+      </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

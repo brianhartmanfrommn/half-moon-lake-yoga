@@ -1,0 +1,19 @@
+# IDEs
+.vscode/
+.idea/
+
+# Angular Cache
+.angular/
+
+# Firebase Cache
+.firebase/
+
+# Build Output
+dist/
+
+# Dependencies
+node_modules/
+
+# SECRETS (Where your new Firebase API key lives!)
+.env
+.env.local

@@ -1,0 +1,213 @@
+// Calendar Grid Styles (Replaces Tailwind Layout)
+
+.mobile-only {
+  display: none;
+  @media (max-width: 959px) {
+    display: block;
+  }
+}
+
+.desktop-only {
+  @media (max-width: 959px) {
+    display: none !important;
+  }
+}
+
+.mobile-month-header {
+  text-align: center;
+  padding: 16px 0 8px;
+  h2 { margin: 0; }
+}
+
+.mobile-date-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 16px;
+  
+  .selected-date-display {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  @media (min-width: 960px) {
+    display: none;
+  }
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center; /* Centered the entire navigation block */
+  align-items: center;
+  padding: 8px 16px;
+  gap: 8px; /* Added spacing between the buttons and the title */
+  
+  // Center the month title within the header area
+  .mat-card-title {
+    /* flex-grow: 1; was removed */
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.calendar-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+  border-bottom: 1px solid var(--mat-divider-color);
+  margin-bottom: 4px;
+
+  .weekday-label {
+    padding: 8px 0;
+    font-weight: 500;
+    color: var(--mat-secondary-text-color);
+  }
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.calendar-day-cell {
+  min-height: 70px;
+  padding: 4px;
+  // This uses the theme's divider color for the border
+  border: 1px solid var(--mat-divider-color);
+  border-radius: var(--mat-border-radius);
+  transition: all 150ms ease-in-out;
+  /* overflow: hidden; was removed for responsiveness */
+
+  @media (max-width: 959px) {
+    min-height: 40px; // Smaller height for mobile grid
+  }
+
+  &.empty-cell {
+    background-color: var(--mat-app-background-color);
+  }
+
+  &.has-classes {
+    cursor: pointer;
+    // Uses the theme's primary color for border highlight
+    border-color: var(--mat-primary-color);
+    background-color: #ff5722;
+    color: black;
+
+    // Shade days with events on mobile
+    @media (max-width: 959px) {
+      border-color: var(--mat-divider-color);
+    }
+  }
+
+  &:not(.empty-cell).has-classes:hover {
+    // Uses the primary color mix for hover effect
+    background-color: #f0f0f0; // Light grey hover
+    color: var(--mat-primary-text-color); 
+
+    .class-item {
+        // Revert class item colors to be suitable for a light grey cell background
+        background-color: color-mix(in srgb, var(--mat-primary-color) 10%, white);
+        color: var(--mat-primary-text-color);
+    }
+  }
+
+  &.is-today {
+    &:not(.has-classes) {
+      background-color: #eeeeee;
+    }
+  }
+
+  &.is-selected {
+    // Shade the selected day
+    @media (max-width: 959px) {
+      background-color: #ff5722 !important;
+      color: white !important;
+      border: 1px solid black !important;
+    }
+  }
+
+  .day-number {
+    font-weight: 500;
+    text-align: right;
+  }
+}
+
+.mobile-weekday-label {
+  display: none;
+  margin-right: 4px;
+}
+
+.class-list {
+  margin-top: 4px;
+  overflow-y: auto;
+  max-height: 70px;
+
+  @media (max-width: 959px) {
+    display: none;
+  }
+}
+
+.class-item {
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 2px;
+  padding: 1px 2px;
+  border-radius: 4px;
+  
+  /* MODIFIED: Use flex-column to stack time and location */
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1; 
+  /* Removed white-space: nowrap, overflow: hidden, text-overflow: ellipsis from root */
+
+  background-color: color-mix(in srgb, var(--mat-primary-color) 10%, white);
+  color: var(--mat-primary-text-color);
+
+  .class-time-display {
+    font-weight: 700; /* Make time bold */
+    font-size: 16px;
+  }
+  
+  .class-location-display {
+    font-size: 11px; /* Smaller font for location */
+    font-size: 14px; /* Smaller font for location */
+    opacity: 0.9;
+    /* Truncation for location */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+  
+  &.is-canceled {
+    background-color: color-mix(in srgb, var(--mat-warn-color) 10%, white);
+    color: var(--mat-warn-color);
+    text-decoration: line-through;
+    line-height: normal; /* Ensure CANCELED text is centered */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+}
+
+.mobile-event-details {
+  padding: 16px;
+  border-top: 1px solid var(--mat-divider-color);
+  
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  button {
+    margin-top: 8px;
+    width: 100%;
+  }
+}

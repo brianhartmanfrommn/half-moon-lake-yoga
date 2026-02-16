@@ -11,7 +11,7 @@
       } @else {
       <div class="login-options">
         <!-- Email/Password -->
-        <!-- <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput [(ngModel)]="email" type="email">
         </mat-form-field>
@@ -23,16 +23,20 @@
           Login with Email
         </button>
 
-        <mat-divider class="divider"></mat-divider> -->
+        <mat-divider class="divider"></mat-divider>
 
         <!-- Social Providers -->
-        <button mat-stroked-button (click)="loginGoogle()" [disabled]="isProcessing">
+        <!-- <button mat-stroked-button (click)="loginGoogle()" [disabled]="isProcessing">
           <mat-icon>public</mat-icon> Login with Google
+        </button> -->
+        <button mat-stroked-button (click)="loginGoogle()" [disabled]="isProcessing" class="google-btn">
+          <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google Logo" class="google-icon">
+          <span class="btn-text">Login with Google</span>
         </button>
 
-        <button mat-stroked-button (click)="loginApple()" [disabled]="isProcessing">
+        <!-- <button mat-stroked-button (click)="loginApple()" [disabled]="isProcessing">
           <mat-icon>apple</mat-icon> Login with Apple
-        </button>
+        </button> -->
       </div>
       }
     </mat-card-content>

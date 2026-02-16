@@ -26,3 +26,26 @@
 .divider {
   margin: 8px 0;
 }
+
+.google-btn {
+
+  /* Force the button's internal label to be a flex container */
+  ::ng-deep .mdc-button__label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  /* Removes any inline-block bottom margin */
+}
+
+.btn-text {
+  line-height: 1;
+  /* Ensures vertical centering of the text string */
+}

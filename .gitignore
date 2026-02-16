@@ -26,6 +26,8 @@ node_modules/
 # Ignore the specific environment file containing your Firebase API key
 src/environments/environment.ts
 src/environments/environment.prod.ts
+service-account-key.json
+set-admins.js
 
 # While you aren't using .env with 'ng serve', it's good practice to keep these ignored
 .env

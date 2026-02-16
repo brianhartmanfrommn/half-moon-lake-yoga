@@ -62,11 +62,11 @@
       <mat-card-actions align="end">
         @if (isEditing) {
           <button mat-button (click)="cancelEdit()" [disabled]="isProcessing">Cancel</button>
-          <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="updateClass()" [disabled]="isProcessing || !newClassDate || !newClassTime || !newClassLocation">
+          <button mat-raised-button color="primary" (click)="updateClass()" [disabled]="isProcessing || !newClassDate || !newClassTime || !newClassLocation">
             <mat-icon>save</mat-icon> Update Class
           </button>
         } @else {
-          <button mat-raised-button color="accent" (click)="addNewClass()" [disabled]="isProcessing || !newClassDate || !newClassTime || !newClassLocation">
+          <button mat-raised-button color="primary" (click)="addNewClass()" [disabled]="isProcessing || !newClassDate || !newClassTime || !newClassLocation">
             <mat-icon>add</mat-icon> Schedule Class
           </button>
         }

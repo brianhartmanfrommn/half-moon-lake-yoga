@@ -202,14 +202,22 @@ export class HomeComponent {
     return this.sortedClasses().filter(cls => isSameDay(cls.date.toDate(), day));
   }
 
+  isCanceledDay(classes: YogaClass[]): boolean {
+    return classes.length > 0 && classes.every(c => c.isCanceled);
+  }
+
   /**
    * Handles day clicks. On mobile, selects the event. On desktop, navigates to signup.
    */
   handleDayClick(cls: YogaClass[]): void {
-    const activeClass = cls.find(c => !c.isCanceled);
-    if (!activeClass) return;
-
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    // On mobile, allow selecting canceled classes if no active class is present
+    const activeClass = isMobile 
+      ? (cls.find(c => !c.isCanceled) || cls[0]) 
+      : cls.find(c => !c.isCanceled);
+
+    if (!activeClass) return;
 
     if (isMobile) {
       const index = this.sortedClasses().findIndex(c => c.id === activeClass.id);

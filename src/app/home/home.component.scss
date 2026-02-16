@@ -103,6 +103,18 @@
     @media (max-width: 959px) {
       border-color: var(--mat-divider-color);
     }
+
+    &.is-canceled-day {
+      background-color: #616161;
+      border-color: #424242;
+      color: white;
+
+      .class-item {
+        background-color: #757575;
+        color: white;
+        text-decoration: line-through;
+      }
+    }
   }
 
   &:not(.empty-cell).has-classes:hover {
@@ -114,6 +126,15 @@
         // Revert class item colors to be suitable for a light grey cell background
         background-color: color-mix(in srgb, var(--mat-primary-color) 10%, white);
         color: var(--mat-primary-text-color);
+    }
+
+    &.is-canceled-day {
+      background-color: #757575;
+      color: white;
+      .class-item {
+        background-color: #9e9e9e;
+        color: white;
+      }
     }
   }
 

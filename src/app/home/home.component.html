@@ -48,6 +48,7 @@
                 class="calendar-day-cell"
                 [class.is-today]="isToday(day)"
                 [class.has-classes]="getClassesForDay(day).length > 0"
+                [class.is-canceled-day]="isCanceledDay(getClassesForDay(day))"
                 [class.is-selected]="selectedEvent() && getClassesForDay(day).includes(selectedEvent()!)"
               >
                 <div class="day-number">
@@ -93,7 +94,7 @@
           <mat-icon>location_on</mat-icon>
           <span>{{ evt.location }}</span>
         </div>
-        <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="bookClass(evt)" [disabled]="evt.isCanceled">
+        <button mat-raised-button color="primary" (click)="bookClass(evt)" [disabled]="evt.isCanceled">
           {{ evt.isCanceled ? 'CANCELED' : 'Sign Up' }}
         </button>
       </div>

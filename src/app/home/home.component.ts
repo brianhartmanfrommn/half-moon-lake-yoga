@@ -203,13 +203,27 @@ export class HomeComponent {
   }
 
   /**
-   * Navigates to the sign-up page for a selected class.
+   * Handles day clicks. On mobile, selects the event. On desktop, navigates to signup.
    */
   handleDayClick(cls: YogaClass[]): void {
     const activeClass = cls.find(c => !c.isCanceled);
-    if (activeClass) {
-        this.router.navigate(['/signup', activeClass.id]);
+    if (!activeClass) return;
+
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    if (isMobile) {
+      const index = this.sortedClasses().findIndex(c => c.id === activeClass.id);
+      if (index !== -1) {
+        this.selectedEventIndex.set(index);
+        this.updateMonthFromEvent(activeClass);
+      }
+    } else {
+      this.bookClass(activeClass);
     }
+  }
+
+  bookClass(cls: YogaClass): void {
+    this.router.navigate(['/signup', cls.id]);
   }
 
   formatDate(timestamp: any): string {

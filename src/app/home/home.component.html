@@ -1,28 +1,32 @@
 <div class="space-y-8 max-w-7xl mx-auto">
   
   <mat-card class="mat-elevation-z8">
+    <!-- Mobile Header: Month Name -->
     <div class="mobile-month-header mobile-only">
       <h2 class="mat-h2">{{ displayMonth() }}</h2>
     </div>
 
+    <!-- Mobile Date Navigation -->
     <div class="mobile-date-nav mobile-only">
-      <button mat-icon-button (click)="prevEvent()" [style.visibility]="selectedEventIndex() > 0 ? 'visible' : 'hidden'" aria-label="Previous Event">
+      <button mat-icon-button class="calendar-nav-btn" (click)="prevEvent()" [style.visibility]="selectedEventIndex() > 0 ? 'visible' : 'hidden'" aria-label="Previous Event">
         <mat-icon>arrow_back</mat-icon>
       </button>
       
       <div class="selected-date-display" [innerHTML]="mobileSelectedDate()"></div>
 
-      <button mat-icon-button (click)="nextEvent()" [style.visibility]="selectedEventIndex() < sortedClasses().length - 1 ? 'visible' : 'hidden'" aria-label="Next Event">
+      <button mat-icon-button class="calendar-nav-btn" (click)="nextEvent()" [style.visibility]="selectedEventIndex() < sortedClasses().length - 1 ? 'visible' : 'hidden'" aria-label="Next Event">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
 
     <div class="calendar-header desktop-only">
-      <button mat-icon-button (click)="previousMonth()" aria-label="Previous Month">
+      <button mat-icon-button class="calendar-nav-btn" (click)="previousMonth()" aria-label="Previous Month">
         <mat-icon>arrow_back</mat-icon>
       </button>
+
       <mat-card-title class="mat-subheading-2">{{ displayMonth() }}</mat-card-title>
-      <button mat-icon-button (click)="nextMonth()" aria-label="Next Month">
+
+      <button mat-icon-button class="calendar-nav-btn" (click)="nextMonth()" aria-label="Next Month">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
@@ -77,6 +81,7 @@
       </div>
     </mat-card-content>
 
+    <!-- Mobile Details Section -->
     @if (selectedEvent(); as evt) {
       <div class="mobile-event-details mobile-only">
         <h3 class="mat-h3">Class Details</h3>
@@ -88,7 +93,7 @@
           <mat-icon>location_on</mat-icon>
           <span>{{ evt.location }}</span>
         </div>
-        <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="handleDayClick([evt])" [disabled]="evt.isCanceled">
+        <button mat-raised-button style="background-color: #ff5722; color: white;" (click)="bookClass(evt)" [disabled]="evt.isCanceled">
           {{ evt.isCanceled ? 'CANCELED' : 'Sign Up' }}
         </button>
       </div>

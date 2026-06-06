@@ -1,4 +1,20 @@
 <div class="space-y-8 max-w-7xl mx-auto">
+
+  @if (pushService.isSupported()) {
+    <div class="subscribe-row">
+      <button
+        mat-stroked-button
+        [color]="pushService.isSubscribed() ? 'primary' : undefined"
+        [disabled]="isSubscribeProcessing()"
+        (click)="toggleSubscription()"
+        class="subscribe-btn"
+      >
+        <mat-icon>{{ pushService.isSubscribed() ? 'notifications_active' : 'notifications_none' }}</mat-icon>
+        {{ pushService.isSubscribed() ? 'Subscribed to Class Updates' : 'Subscribe to Class Updates' }}
+      </button>
+    </div>
+  }
+
   
   <mat-card class="mat-elevation-z8">
     <!-- Mobile Header: Month Name -->
@@ -97,6 +113,21 @@
         <button mat-raised-button color="primary" (click)="bookClass(evt)" [disabled]="evt.isCanceled">
           {{ evt.isCanceled ? 'CANCELED' : 'Sign Up' }}
         </button>
+
+        <div class="mobile-attendees-section">
+          <h3 class="mat-h3">Who's Signed Up? ({{ evt.attendees.length }})</h3>
+          <mat-divider></mat-divider>
+          <mat-list role="list">
+            @for (attendee of evt.attendees; track $index) {
+              <mat-list-item role="listitem">
+                <mat-icon matListItemIcon>person</mat-icon>
+                <div matListItemTitle>{{ attendee }}</div>
+              </mat-list-item>
+            } @empty {
+              <div class="no-attendees">No attendees signed up yet. Be the first!</div>
+            }
+          </mat-list>
+        </div>
       </div>
     }
   </mat-card>

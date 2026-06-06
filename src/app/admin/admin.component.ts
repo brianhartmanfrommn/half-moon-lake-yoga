@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, addDoc, updateDoc, deleteDoc, collection, Timestamp, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, doc, addDoc, updateDoc, deleteDoc, collection, Timestamp, serverTimestamp, Firestore } from 'firebase/firestore';
 import { YogaDataService, YogaClass } from '../shared/yoga-data.service';
 
 // Material Imports
@@ -101,7 +101,7 @@ export class AdminComponent implements AfterViewInit {
   editAttendees: string[] = [];
   newAttendeeName: string = '';
 
-  private db: any = getFirestore();
+  private db: Firestore = getFirestore();
 
   formatDateTime(timestamp: any): string {
     return timestamp.toDate().toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });

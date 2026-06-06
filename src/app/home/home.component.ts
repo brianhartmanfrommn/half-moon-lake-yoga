@@ -2,11 +2,14 @@
 import { ChangeDetectionStrategy, Component, signal, computed, inject, effect, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-// Import Angular Material Modules for UI components
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { YogaDataService, YogaClass } from '../shared/yoga-data.service';
+import { PushNotificationService } from '../shared/push-notification.service';
 
 /**
  * Helper to check if two Dates represent the same day.
@@ -22,10 +25,13 @@ function isSameDay(date1: Date, date2: Date): boolean {
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatButtonModule, 
+    CommonModule,
+    MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatListModule,
+    MatDividerModule,
+    MatSnackBarModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -34,6 +40,10 @@ function isSameDay(date1: Date, date2: Date): boolean {
 export class HomeComponent {
   private yogaData = inject(YogaDataService);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  readonly pushService = inject(PushNotificationService);
+
+  isSubscribeProcessing = signal(false);
   
   // Access the stream of sorted classes from the data service
   classesSignal = this.yogaData.sortedClasses;
@@ -227,6 +237,29 @@ export class HomeComponent {
     } else if (!activeClass.isCanceled) {
       // On desktop, only navigate if NOT canceled
       this.bookClass(activeClass);
+    }
+  }
+
+  async toggleSubscription(): Promise<void> {
+    if (this.isSubscribeProcessing()) return;
+    this.isSubscribeProcessing.set(true);
+
+    try {
+      if (this.pushService.isSubscribed()) {
+        await this.pushService.unsubscribe();
+        this.snackBar.open('Unsubscribed from class updates.', 'OK', { duration: 3000 });
+      } else {
+        const result = await this.pushService.subscribe();
+        if (result === 'granted') {
+          this.snackBar.open('You\'ll now receive class update notifications!', 'OK', { duration: 3500 });
+        } else if (result === 'denied') {
+          this.snackBar.open('Notifications blocked. Please enable them in your browser settings.', 'OK', { duration: 5000 });
+        } else {
+          this.snackBar.open('Something went wrong. Please try again.', 'OK', { duration: 3000 });
+        }
+      }
+    } finally {
+      this.isSubscribeProcessing.set(false);
     }
   }
 

@@ -1,7 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
+    // Push notification subscriptions — anyone can register or remove their own token.
+    // Cloud Functions read this via the admin SDK (bypasses rules).
+    match /subscriptions/{token} {
+      allow create, delete: if true;
+      allow read, update: if false;
+    }
+
     // Rules for the classes collection
     match /classes/{classId} {
       

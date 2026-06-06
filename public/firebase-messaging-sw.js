@@ -12,12 +12,5 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  const title = payload.notification?.title || 'Half Moon Lake Yoga';
-  const options = {
-    body: payload.notification?.body || '',
-    icon: '/favicon.ico',
-    badge: '/favicon.ico'
-  };
-  self.registration.showNotification(title, options);
-});
+// Firebase automatically shows background notifications from the notification payload.
+// onBackgroundMessage is intentionally omitted to prevent duplicate notifications.

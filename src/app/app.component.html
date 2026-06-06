@@ -53,6 +53,26 @@
           </div>
         }
       </main>
+
+      @if (showInstallBanner()) {
+        <div class="install-banner">
+          <img src="assets/images/yoga.png" alt="App icon" class="install-banner__icon" />
+          <div class="install-banner__text">
+            <strong>Half Moon Lake Yoga</strong>
+            @if (isIosBanner()) {
+              <span>Tap <mat-icon class="install-banner__share-icon">ios_share</mat-icon> then <em>Add to Home Screen</em></span>
+            } @else {
+              <span>Add this app to your home screen</span>
+            }
+          </div>
+          @if (!isIosBanner()) {
+            <button mat-flat-button color="primary" class="install-banner__btn" (click)="installApp()">Install</button>
+          }
+          <button mat-icon-button class="install-banner__close" aria-label="Dismiss" (click)="dismissInstallBanner()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

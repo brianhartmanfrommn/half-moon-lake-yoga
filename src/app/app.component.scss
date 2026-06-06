@@ -72,6 +72,75 @@ mat-toolbar {
     justify-content: center;
 }
 
+.install-banner {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    line-height: 1.4;
+    min-width: 0;
+
+    strong {
+      font-size: 14px;
+    }
+
+    span {
+      color: #555;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+  }
+
+  &__share-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    color: #1976d2;
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    font-size: 13px;
+    height: 32px;
+    line-height: 32px;
+  }
+
+  &__close {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
 .mobile-only {
   display: none;
   @media (max-width: 959px) {

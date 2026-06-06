@@ -10,6 +10,7 @@ const SUBSCRIBED_KEY = 'push_subscribed';
 @Injectable({ providedIn: 'root' })
 export class PushNotificationService {
   readonly isSubscribed = signal(localStorage.getItem(SUBSCRIBED_KEY) === 'true');
+  private foregroundListenerRegistered = false;
 
   isSupported(): boolean {
     return typeof window !== 'undefined'
@@ -41,13 +42,15 @@ export class PushNotificationService {
       localStorage.setItem(SUBSCRIBED_KEY, 'true');
       this.isSubscribed.set(true);
 
-      // Show in-app notifications when the tab is in the foreground
-      onMessage(messaging, (payload) => {
-        new Notification(payload.notification?.title ?? 'Half Moon Lake Yoga', {
-          body: payload.notification?.body ?? '',
-          icon: '/favicon.ico'
+      if (!this.foregroundListenerRegistered) {
+        this.foregroundListenerRegistered = true;
+        onMessage(messaging, (payload) => {
+          new Notification(payload.notification?.title ?? 'Half Moon Lake Yoga', {
+            body: payload.notification?.body ?? '',
+            icon: '/favicon.ico'
+          });
         });
-      });
+      }
 
       return 'granted';
     } catch (err) {

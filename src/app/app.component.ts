@@ -8,12 +8,14 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { YogaDataService } from './shared/yoga-data.service';
 
 // Material Imports
-import { MatToolbarModule } from '@angular/material/toolbar'; 
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+
+const INSTALL_DISMISSED_KEY = 'install_banner_dismissed';
 
 // Global variables provided by the environment
 declare const __initial_auth_token: string;
@@ -38,13 +40,18 @@ declare const __initial_auth_token: string;
 })
 export class AppComponent implements OnInit, OnDestroy {
   private auth: any;
+  private deferredInstallPrompt: any = null;
 
   // Auth state signals
   userId = signal<string | null>(null);
   isAuthReady = signal(false);
   isAuthenticated = signal(false);
-  isAdmin = signal(false); // Changed from computed to signal to allow async updates
+  isAdmin = signal(false);
   showBackButton = signal(false);
+
+  // Install banner
+  showInstallBanner = signal(false);
+  isIosBanner = signal(false);
 
   constructor(private router: Router, private yogaData: YogaDataService) {
     this.router.events.subscribe(event => {
@@ -56,6 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initializeFirebase();
+    this.initInstallBanner();
   }
 
   ngOnDestroy() {
@@ -96,6 +104,42 @@ export class AppComponent implements OnInit, OnDestroy {
       console.error('Firebase Initialization Error:', error);
       this.isAuthReady.set(true);
     }
+  }
+
+  private initInstallBanner() {
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true;
+
+    if (isStandalone || localStorage.getItem(INSTALL_DISMISSED_KEY) === 'true') return;
+
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIos) {
+      this.isIosBanner.set(true);
+      this.showInstallBanner.set(true);
+      return;
+    }
+
+    window.addEventListener('beforeinstallprompt', (e: Event) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+      this.showInstallBanner.set(true);
+    });
+  }
+
+  async installApp() {
+    if (!this.deferredInstallPrompt) return;
+    this.deferredInstallPrompt.prompt();
+    const { outcome } = await this.deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      this.dismissInstallBanner();
+    }
+    this.deferredInstallPrompt = null;
+  }
+
+  dismissInstallBanner() {
+    localStorage.setItem(INSTALL_DISMISSED_KEY, 'true');
+    this.showInstallBanner.set(false);
   }
 
   logout() {

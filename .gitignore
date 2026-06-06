@@ -33,3 +33,4 @@ set-admins.js
 # --- System Files ---
 .DS_Store
 Thumbs.db
+.firebaserc

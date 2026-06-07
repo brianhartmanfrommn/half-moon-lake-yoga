@@ -28,7 +28,11 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/favicon.ico",
+              {
+                "glob": "*.{png,svg,ico,webmanifest}",
+                "input": "src",
+                "output": "/"
+              },
               "src/assets"
             ],
             "styles": [
@@ -40,8 +44,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.5MB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -49,6 +53,7 @@
                   "maximumError": "100kB"
                 }
               ],
+              "serviceWorker": "src/ngsw-config.json",
               "outputHashing": "all"
             },
             "development": {

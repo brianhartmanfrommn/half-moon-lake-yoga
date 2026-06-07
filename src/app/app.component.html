@@ -37,23 +37,6 @@
     </mat-sidenav>
 
     <mat-sidenav-content class="flex flex-col">
-      <main class="flex-grow w-full p-4 sm:p-6 lg:p-8 flex flex-col">
-        @if (!isAuthReady()) {
-          <div class="spinner-container text-gray-500">
-             <div class="spinner-content">
-                <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
-                <p class="mt-4">Initializing application...</p>
-             </div>
-          </div>
-        }
-
-        @if (isAuthReady()) {
-          <div class="w-full h-full">
-            <router-outlet></router-outlet>
-          </div>
-        }
-      </main>
-
       @if (showInstallBanner()) {
         <div class="install-banner">
           <img src="assets/images/yoga.png" alt="App icon" class="install-banner__icon" />
@@ -73,6 +56,24 @@
           </button>
         </div>
       }
+
+      <main class="flex-grow w-full p-4 sm:p-6 lg:p-8 flex flex-col">
+        @if (!isAuthReady()) {
+          <div class="spinner-container text-gray-500">
+             <div class="spinner-content">
+                <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+                <p class="mt-4">Initializing application...</p>
+             </div>
+          </div>
+        }
+
+        @if (isAuthReady()) {
+          <div class="w-full h-full">
+            <router-outlet></router-outlet>
+          </div>
+        }
+      </main>
+
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

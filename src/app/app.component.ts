@@ -19,6 +19,7 @@ const INSTALL_DISMISSED_KEY = 'install_banner_dismissed';
 
 // Global variables provided by the environment
 declare const __initial_auth_token: string;
+declare const __deferredInstallPrompt: any;
 
 @Component({
   selector: 'app-root',
@@ -113,13 +114,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (isStandalone || localStorage.getItem(INSTALL_DISMISSED_KEY) === 'true') return;
 
-    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    // Improved iOS detection: Modern iPads identify as MacIntel but have touch points
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     if (isIos) {
       this.isIosBanner.set(true);
       this.showInstallBanner.set(true);
       return;
     }
 
+    // Check if the event was already captured by a script in index.html
+    if (typeof __deferredInstallPrompt !== 'undefined' && __deferredInstallPrompt) {
+      this.deferredInstallPrompt = __deferredInstallPrompt;
+      this.showInstallBanner.set(true);
+    }
+
+    // Also listen for the event in case it fires after initialization
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;

@@ -24,7 +24,11 @@ export class PushNotificationService {
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') return 'denied';
 
-      const sw = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      // Register at a sub-scope so Angular's ngsw-worker.js controls the root
+      // and this SW handles only Firebase push events without conflicting.
+      const sw = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+        scope: '/firebase-cloud-messaging-push-scope'
+      });
       const messaging = getMessaging(getApp());
       const token = await getToken(messaging, {
         vapidKey: environment.vapidKey,

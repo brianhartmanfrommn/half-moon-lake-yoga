@@ -63,6 +63,7 @@
                 (click)="handleDayClick(getClassesForDay(day))"
                 class="calendar-day-cell"
                 [class.is-today]="isToday(day)"
+                [class.is-past]="isPastDay(day, getClassesForDay(day))"
                 [class.has-classes]="getClassesForDay(day).length > 0"
                 [class.is-canceled-day]="isCanceledDay(getClassesForDay(day))"
                 [class.is-selected]="selectedEvent() && getClassesForDay(day).includes(selectedEvent()!)"
@@ -110,9 +111,9 @@
           <mat-icon>location_on</mat-icon>
           <span>{{ evt.location }}</span>
         </div>
-        <button mat-raised-button color="primary" (click)="bookClass(evt)" [disabled]="evt.isCanceled">
-          {{ evt.isCanceled ? 'CANCELED' : 'Sign Up' }}
-        </button>
+        @if (!isPastClass(evt) && !evt.isCanceled) {
+          <button mat-raised-button color="primary" (click)="bookClass(evt)">Sign Up</button>
+        }
 
         <div class="mobile-attendees-section">
           <h3 class="mat-h3">Who's Signed Up? ({{ evt.attendees.length }})</h3>

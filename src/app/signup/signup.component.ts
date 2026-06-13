@@ -117,6 +117,14 @@ export class SignupComponent {
     return this.classes().find(c => c.id === this.selectedClassId);
   }
 
+  isPastClass(): boolean {
+    const cls = this.selectedClass;
+    if (!cls) return false;
+    const oneHourAgo = new Date();
+    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+    return cls.date.toDate() < oneHourAgo;
+  }
+
   formatDateTime(timestamp: any): string {
     return timestamp.toDate().toLocaleString('en-US', { weekday: 'long', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true });
   }

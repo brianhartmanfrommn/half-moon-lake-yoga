@@ -68,18 +68,9 @@ export class HomeComponent {
 
   // --- Filtered and Computed State ---
 
-  /**
-   * Filter classes to only show current and future events.
-   */
-  sortedClasses = computed(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    return this.classesSignal().filter(c => c.date.toDate() >= now).sort((a, b) => {
-      const dateA = a.date.toDate();
-      const dateB = b.date.toDate();
-      return dateA.getTime() - dateB.getTime();
-    });
-  });
+  sortedClasses = computed(() =>
+    this.classesSignal().slice().sort((a, b) => a.date.toDate().getTime() - b.date.toDate().getTime())
+  );
 
   selectedEventIndex = signal<number>(-1);
   selectedDate = signal<Date | null>(null);
@@ -208,6 +199,21 @@ export class HomeComponent {
     return isSameDay(day, this.today);
   }
 
+  isPastClass(cls: YogaClass): boolean {
+    const oneHourAgo = new Date();
+    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+    return cls.date.toDate() < oneHourAgo;
+  }
+
+  isPastDay(day: Date | null, classes: YogaClass[]): boolean {
+    if (!day) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (day < today) return true;
+    // Today: grey only when every class on that day is past by the 1-hour rule
+    return isSameDay(day, new Date()) && classes.length > 0 && classes.every(c => this.isPastClass(c));
+  }
+
   getClassesForDay(day: Date): YogaClass[] {
     if (!day) return [];
     return this.sortedClasses().filter(cls => isSameDay(cls.date.toDate(), day));
@@ -235,7 +241,6 @@ export class HomeComponent {
         this.updateMonthFromEvent(activeClass);
       }
     } else if (!activeClass.isCanceled) {
-      // On desktop, only navigate if NOT canceled
       this.bookClass(activeClass);
     }
   }

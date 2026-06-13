@@ -64,6 +64,7 @@
 .calendar-container {
   max-width: 1000px;
   margin: 0 auto;
+  user-select: none;
 }
 
 .calendar-weekdays {
@@ -128,6 +129,27 @@
     }
   }
 
+  &.is-past.has-classes {
+    background-color: #d0d0d0;
+    border-color: #b0b0b0;
+    color: #555;
+    cursor: pointer;
+
+    .class-item {
+      color: #666;
+    }
+
+    &.is-canceled-day {
+      background-color: #c4c4c4;
+      border-color: #a0a0a0;
+
+      .class-item {
+        background-color: #b4b4b4;
+        color: #555;
+      }
+    }
+  }
+
   &:not(.empty-cell).has-classes:hover {
     // Uses the primary color mix for hover effect
     background-color: #f0f0f0; // Light grey hover
@@ -155,13 +177,20 @@
     }
   }
 
-  // UPDATED: Selection color only applies if the day is not canceled
   &.is-selected:not(.is-canceled-day) {
-    // Shade the selected day
     @media (max-width: 959px) {
       background-color: #ff5722 !important;
       color: white !important;
       border: 1px solid black !important;
+    }
+
+    &.is-past {
+      @media (max-width: 959px) {
+        background-color: #d0d0d0 !important;
+        color: #555 !important;
+        border: 2px solid black !important;
+        font-weight: 900 !important;
+      }
     }
   }
 

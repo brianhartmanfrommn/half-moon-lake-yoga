@@ -17,20 +17,15 @@
 
   
   <mat-card class="mat-elevation-z8">
-    <!-- Mobile Header: Month Name -->
-    <div class="mobile-month-header mobile-only">
-      <h2 class="mat-h2">{{ displayMonth() }}</h2>
-    </div>
-
-    <!-- Mobile Date Navigation -->
+    <!-- Mobile Month Navigation -->
     <div class="mobile-date-nav mobile-only">
-      <button mat-icon-button class="calendar-nav-btn" (click)="prevEvent()" [style.visibility]="selectedEventIndex() > 0 ? 'visible' : 'hidden'" aria-label="Previous Event">
+      <button mat-icon-button class="calendar-nav-btn" (click)="previousMonth()" aria-label="Previous Month">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      
-      <div class="selected-date-display" [innerHTML]="mobileSelectedDate()"></div>
 
-      <button mat-icon-button class="calendar-nav-btn" (click)="nextEvent()" [style.visibility]="selectedEventIndex() < sortedClasses().length - 1 ? 'visible' : 'hidden'" aria-label="Next Event">
+      <div class="selected-date-display">{{ displayMonth() }}</div>
+
+      <button mat-icon-button class="calendar-nav-btn" (click)="nextMonth()" aria-label="Next Month">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>

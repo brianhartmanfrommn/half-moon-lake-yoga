@@ -37,7 +37,13 @@ export class PushNotificationService {
 
       if (!token) return 'error';
 
-      await setDoc(doc(getFirestore(getApp()), 'subscriptions', token), {
+      const db = getFirestore(getApp());
+      const oldToken = localStorage.getItem(TOKEN_KEY);
+      if (oldToken && oldToken !== token) {
+        await deleteDoc(doc(db, 'subscriptions', oldToken));
+      }
+
+      await setDoc(doc(db, 'subscriptions', token), {
         token,
         createdAt: serverTimestamp()
       });

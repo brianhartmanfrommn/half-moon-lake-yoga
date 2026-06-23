@@ -98,32 +98,36 @@
     @if (selectedEvent(); as evt) {
       <div class="mobile-event-details mobile-only">
         <h3 class="mat-h3">Class Details</h3>
-        <div class="detail-row">
-          <mat-icon>schedule</mat-icon>
-          <span>{{ formatTime(evt.date) }}</span>
-        </div>
-        <div class="detail-row">
-          <mat-icon>location_on</mat-icon>
-          <span>{{ evt.location }}</span>
-        </div>
-        @if (!isPastClass(evt) && !evt.isCanceled) {
-          <button mat-raised-button color="primary" (click)="bookClass(evt)">Sign Up</button>
-        }
+        @if (evt.isCanceled) {
+          <div class="canceled-notice">CANCELED</div>
+        } @else {
+          <div class="detail-row">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ formatTime(evt.date) }}</span>
+          </div>
+          <div class="detail-row">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ evt.location }}</span>
+          </div>
+          @if (!isPastClass(evt)) {
+            <button mat-raised-button color="primary" (click)="bookClass(evt)">Sign Up</button>
+          }
 
-        <div class="mobile-attendees-section">
-          <h3 class="mat-h3">Who's Signed Up? ({{ evt.attendees.length }})</h3>
-          <mat-divider></mat-divider>
-          <mat-list role="list">
-            @for (attendee of evt.attendees; track $index) {
-              <mat-list-item role="listitem">
-                <mat-icon matListItemIcon>person</mat-icon>
-                <div matListItemTitle>{{ attendee }}</div>
-              </mat-list-item>
-            } @empty {
-              <div class="no-attendees">No attendees signed up yet. Be the first!</div>
-            }
-          </mat-list>
-        </div>
+          <div class="mobile-attendees-section">
+            <h3 class="mat-h3">Who's Signed Up? ({{ evt.attendees.length }})</h3>
+            <mat-divider></mat-divider>
+            <mat-list role="list">
+              @for (attendee of evt.attendees; track $index) {
+                <mat-list-item role="listitem">
+                  <mat-icon matListItemIcon>person</mat-icon>
+                  <div matListItemTitle>{{ attendee }}</div>
+                </mat-list-item>
+              } @empty {
+                <div class="no-attendees">No attendees signed up yet. Be the first!</div>
+              }
+            </mat-list>
+          </div>
+        }
       </div>
     }
   </mat-card>

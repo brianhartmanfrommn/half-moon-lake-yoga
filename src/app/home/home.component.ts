@@ -276,6 +276,13 @@ export class HomeComponent {
     return timestamp.toDate().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' });
   }
 
+  formatDateDisplay(timestamp: any): string {
+    const date = timestamp.toDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const day = date.getDate();
+    return `${month} ${day}${this.getOrdinal(day)}`;
+  }
+
   formatTime(timestamp: any): string {
     return timestamp.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
   }

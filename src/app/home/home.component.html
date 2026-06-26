@@ -102,6 +102,10 @@
           <div class="canceled-notice">CANCELED</div>
         } @else {
           <div class="detail-row">
+            <mat-icon>event</mat-icon>
+            <span>{{ formatDateDisplay(evt.date) }}</span>
+          </div>
+          <div class="detail-row">
             <mat-icon>schedule</mat-icon>
             <span>{{ formatTime(evt.date) }}</span>
           </div>
